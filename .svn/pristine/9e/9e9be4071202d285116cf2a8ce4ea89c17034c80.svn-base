@@ -1,0 +1,16 @@
+package com.lemon.service;
+
+import com.lemon.pojo.Comment;
+
+public interface CommentService {
+	
+	public int insert(Comment comment) throws Exception;
+	
+	/*public int insert(Comment comment) throws Exception;
+	
+	public int insert(Comment comment) throws Exception;
+	
+	public int insert(Comment comment) throws Exception;
+	
+	public int insert(Comment comment) throws Exception;*/
+}

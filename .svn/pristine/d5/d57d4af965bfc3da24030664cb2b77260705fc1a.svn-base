@@ -1,0 +1,22 @@
+package com.lemon.controller;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.lemon.pojo.Content;
+import com.lemon.utils.JsonRs;
+import com.lemon.utils.ReadTxt;
+
+@Controller
+public class ReadBookController {
+
+	@RequestMapping("read.do")
+	@ResponseBody
+	public JsonRs read(String path) throws Exception{
+		List<Content> list = new ReadTxt().readTxt(path);
+		return new JsonRs("查询成功", true, list.size(), list);
+	}
+}

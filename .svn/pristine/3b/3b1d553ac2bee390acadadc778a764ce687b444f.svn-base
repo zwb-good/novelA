@@ -1,0 +1,43 @@
+﻿<div id="dlg_sort" class="easyui-dialog" data-options="closable:false,title:'分类管理',buttons:'#bt_dlg_sort'" style="width:380px;height:350px;padding:10px;overflow:hidden" closed="true" >
+  <form id="fm_book" method="post">
+    <div class="fitem">
+      <input name="id" type="hidden">
+    </div>
+    <div class="fitem">
+      <label>分类名称:</label>
+      <input id="txt_dlg_name" name="name" class="easyui-textbox" style="width:276px" prompt="必填项" />
+    </div>
+    <div class="fitem" id="dlgImg">
+      <label>封面地址:</label>
+      <input id="txt_dlg_img" name="img" class="easyui-textbox" style="width:190px" prompt="点击上传" data-options="editable:false"/>
+      <a class="easyui-linkbutton" data-options="iconCls:'icon-upload'" id="a_upload" style="height:21px;">上传</a>
+    </div>
+    <div class="fitem">
+      <label>其他标签:</label><br>
+      <div style="width:100%;overflow:hidden" class="easyui-panel">
+        <div style="width:156px;height:256px;display:inline-block;margin-right:10px;padding-top:5px;overflow:hidden" id="left_members">
+          <table class="easyui-datagrid" id="dlg_tbl_noSelected" title="待选标签" data-options="fit:true,singleSelect:true,onDblClickRow:addToLabel">
+            <thead>
+              <tr>
+                <th data-options="field:'name',halign:'center',align:'center',width:130">标签名称</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div style="width:156px;height:256px;display:inline-block;margin-left:10px;padding-top:5px;overflow:hidden" id="right_members">
+          <table class="easyui-datagrid" id="tbl_selected" title="已有标签" data-options="fit:true,singleSelect:true,onDblClickRow:removeFromLabel">
+            <thead>
+              <tr>
+                <th data-options="field:'name',halign:'center',align:'center',width:130">标签名称</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div id="bt_dlg_sort">
+  <a class="easyui-linkbutton" iconCls="icon-email" id="a_save">保存</a>
+  <a class="easyui-linkbutton" iconCls="icon-no" onclick="javascript:$('#dlg_sort').dialog('close')">关闭</a>
+</div>

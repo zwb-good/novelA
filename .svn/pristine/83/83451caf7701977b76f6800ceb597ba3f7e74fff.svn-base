@@ -1,0 +1,21 @@
+﻿<!-- 引导页管理页面的数据表格 -->      
+<table id="tbl_user" class="easyui-datagrid" data-options="singleSelect:true,fit:true,toolbar:'#tb_user'">
+  <thead>
+    <tr>
+      <th data-options="field:'selector',checkbox:true"></th>
+      <th data-options="field:'id',width:40,align:'center',hidden:true">编号</th>
+      <th data-options="field:'userName',width:150,align:'center'" formatter="formatUserName">用户名</th>
+      <th data-options="field:'name',width:150,align:'center'">昵称</th>
+      <th data-options="field:'sex',width:60,align:'center'">性别</th>
+      <th data-options="field:'headUrl',width:200,align:'center'">头像地址</th>
+      <th data-options="field:'signature',width:310,align:'center'">个性签名</th>
+    </tr>
+  </thead>
+</table>
+<!-- 工具栏 -->
+<div id="tb_user" style="padding:5px;">
+  <input class="easyui-textbox" style="width:160px;" id="title" data-options="prompt:'昵称/签名'"/>
+  <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" id="a_search">查询</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" id="a_update">修改</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-delete'" id="a_delete">删除</a>
+</div>

@@ -1,0 +1,16 @@
+﻿<% String panelIndex=request.getParameter("panelIndex");%>
+<div class="easyui-accordion">
+  <div title="页面管理" <%if("0".equals(panelIndex)){%> data-options="selected:true"<%}%> style="overflow:auto;padding:10px;">
+    <!--<a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true,iconCls:'icon-tip'" class="easyui-linkbutton" href="guidepage.jsp?panelIndex=0">引导页面</a>-->
+	<a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true,iconCls:'icon-book'" class="easyui-linkbutton" href="bookshop.jsp?panelIndex=0">书城页面</a>
+	<a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true,iconCls:'icon-clock'" class="easyui-linkbutton" href="carouselManage.jsp?panelIndex=0">轮播图片</a>
+  </div>
+  <div title="书籍管理" <%if("1".equals(panelIndex)){%> data-options="selected:true"<%}%> style="overflow:auto;padding:10px;">
+    <a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true,iconCls:'icon-book'" class="easyui-linkbutton" href="book.jsp?panelIndex=1">小说管理</a>
+	<a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true,iconCls:'icon-save'" class="easyui-linkbutton" href="sortManage.jsp?panelIndex=1">分类管理</a>
+	<a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true,iconCls:'icon-edit'" class="easyui-linkbutton" href="labelManage.jsp?panelIndex=1">标签管理</a>
+  </div>
+  <div title="用户管理" <%if("2".equals(panelIndex)){%> data-options="selected:true"<%}%> style="overflow:auto;padding:10px;">
+	<a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true,iconCls:'icon-account'" class="easyui-linkbutton" href="userManage.jsp?panelIndex=2">读者管理</a>
+  </div>
+</div>

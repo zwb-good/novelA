@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+  <context id="DB2Tables" targetRuntime="MyBatis3">
+    
+    <commentGenerator>
+  <property name="suppressAllComments" value="true" />
+</commentGenerator>
+    
+    <jdbcConnection 
+    driverClass="com.mysql.jdbc.Driver"
+        connectionURL="jdbc:mysql://localhost:3306/novel"
+        userId="root"
+        password="123">
+    </jdbcConnection>
+
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+    <javaModelGenerator 
+    	targetPackage="com.lemon.pojo" 
+    	targetProject=".\src">
+      <property name="enableSubPackages" value="true" />
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+    <sqlMapGenerator
+     targetPackage="com.lemon.dao"
+       targetProject=".\src">
+      <property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+
+    <javaClientGenerator type="XMLMAPPER" 
+    targetPackage="com.lemon.dao"  
+    targetProject=".\src">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+
+<!--  	<table tableName="book" domainObjectName="Book">
+ 		<property name="useActualColumnNames" value="true"/>
+ 	</table>
+	<table tableName="collectbook" domainObjectName="Collectbook">
+		<property name="useActualColumnNames" value="true"/>
+	</table>
+	<table tableName="user" domainObjectName="User">
+		<property name="useActualColumnNames" value="true"/>
+	</table>
+	<table tableName="reader" domainObjectName="Reader">
+		<property name="useActualColumnNames" value="true"/>
+	</table>
+	<table tableName="guidePage" domainObjectName="GuidePage">
+		<property name="useActualColumnNames" value="true"/>
+	</table> -->
+<!-- 	<table tableName="bookshop" domainObjectName="Bookshop">
+		<property name="useActualColumnNames" value="true"/>
+	</table> -->
+<!-- 	<table tableName="carousel" domainObjectName="Carousel">
+		<property name="useActualColumnNames" value="true"/>
+	</table>
+	<table tableName="comment" domainObjectName="Comment">
+		<property name="useActualColumnNames" value="true"/>
+	</table> -->
+	<table tableName="noveltype" domainObjectName="Noveltype">
+		<property name="useActualColumnNames" value="true"/>
+	</table>
+	<table tableName="label" domainObjectName="Label">
+		<property name="useActualColumnNames" value="true"/>
+	</table>
+
+  </context>
+</generatorConfiguration>

@@ -1,0 +1,39 @@
+package com.lemon.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.lemon.pojo.Carousel;
+import com.lemon.pojo.Reader;
+import com.lemon.service.ReaderService;
+import com.lemon.utils.JsonMsg;
+import com.lemon.utils.JsonRs;
+
+@Controller
+@RequestMapping("/ReaderAction")
+public class ReaderController {
+	@Autowired
+	private ReaderService readerService;
+	
+	@RequestMapping("/update")
+	@ResponseBody
+	public JsonMsg update(Reader reader) throws Exception {
+		int total = readerService.update(reader);
+		if(total > 0){
+			return new JsonMsg("更新成功", true);
+		}else {
+			return new JsonMsg("更新失败", false);
+		}
+	}
+	
+	@RequestMapping("/get")
+	@ResponseBody
+	public JsonRs get() throws Exception {
+		List<Reader> list = readerService.select();
+		return new JsonRs("查询成功", true, list.size(), list);
+	}
+}

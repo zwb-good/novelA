@@ -1,0 +1,42 @@
+package com.lemon.service;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.lemon.dao.ReaderMapper;
+import com.lemon.dao.UserMapper;
+import com.lemon.pojo.Reader;
+import com.lemon.pojo.User;
+import com.lemon.pojo.UserExample;
+import com.lemon.pojo.UserExample.Criteria;
+import com.lemon.utils.JsonMsg;
+
+@Service
+public class UserServiceImpl implements UserService{
+	@Autowired
+	private UserMapper userMapper;
+	@Autowired
+	private ReaderMapper readerMapper;
+		
+
+	public JsonMsg addUser(User user,Reader reader)throws Exception {
+		UserExample example = new UserExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andNameEqualTo(user.getName());
+		if(userMapper.selectByExample(example).size() != 0){
+			return new JsonMsg("用户名已注册", false);
+		}else {
+			userMapper.insert(user);
+			reader.setUserId(user.getId());
+			boolean success = readerMapper.insert(reader) == 1?true:false;
+			if(success){
+				return new JsonMsg("注册成功", true);
+			}else {
+				return new JsonMsg("注册失败", false);
+			}
+		}
+	}
+}

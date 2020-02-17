@@ -1,0 +1,10 @@
+package com.lemon.service;
+
+import java.util.List;
+
+import com.lemon.pojo.Noveltype;
+
+public interface NoveltypeService {
+
+	public List<Noveltype> get() throws Exception;
+}

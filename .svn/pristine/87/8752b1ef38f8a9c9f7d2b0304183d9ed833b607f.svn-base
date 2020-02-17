@@ -1,0 +1,29 @@
+package com.lemon.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.lemon.dao.CollectbookMapper;
+import com.lemon.pojo.Collectbook;
+@Service
+public class CollectbookServiceImpl implements CollectbookService {
+	@Autowired
+	private CollectbookMapper collectbookMapper;
+	
+	@Override
+	public List<Collectbook> getCollectbook() throws Exception {
+		return collectbookMapper.selectByExampleAndBook(null);
+	}
+	
+	@Override
+	public int insert(Collectbook collectbook) throws Exception {
+		return collectbookMapper.insertSelective(collectbook);
+	}
+	
+	@Override
+	public int delete(Integer[] ids) throws Exception {
+		return collectbookMapper.deleteByIds(ids);
+	}
+}

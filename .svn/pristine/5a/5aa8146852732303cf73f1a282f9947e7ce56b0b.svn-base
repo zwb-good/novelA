@@ -1,0 +1,50 @@
+﻿<div id="dlg_carousel" class="easyui-dialog" data-options="closable:false,title:'轮播图',buttons:'#bt_dlg_carousel'" style="width:600px;height:400px;padding:10px;overflow:hidden" closed="true" >
+  <div style="overflow:hidden;width:310px;height:100%;display:inline-block;float:left">
+  <form id="fm_carousel" method="post">
+    <div class="fitem">
+      <input name="id" id="carouselId" type="hidden">
+      <input name="bookId" id="bookId" type="hidden">
+    </div>
+    <div class="fitem">
+      <label>所在页面:</label>
+      <input id="txt_dlg_type" name="type" class="easyui-combobox" style="width:240px" data-options="url:'jsondata/carousel_type.json',valueField:'id',textField:'text',editable:false"/>
+    </div>
+    <div class="fitem">
+      <label>页面位置:</label>
+      <input id="txt_dlg_position" name="position" class="easyui-combobox" style="width:240px" data-options="url:'jsondata/carousel_position.json',valueField:'id',textField:'text',editable:false"/>
+    </div>
+    <div class="fitem">
+      <label>图片地址:</label>
+      <input id="txt_dlg_url" name="url" class="easyui-textbox" style="width:155px" prompt="必填项"/>
+      <a class="easyui-linkbutton" data-options="iconCls:'icon-upload'" id="a_upload" style="height:21px;">上传</a>
+    </div>
+    <div class="fitem">
+      <label>链接小说:</label>
+      <input id="txt_dlg_linkBook" name="linkBook" class="easyui-textbox" style="width:240px" prompt="双击右侧列表添加" data-options="editable:false"/>
+    </div>
+  </form>
+  <div class="fitem">
+    <label>图片预览:</label>
+    <div class="carouselImg"></div>
+  </div>
+  </div>
+  <div style="width:226px;height:100%;margin-left:10px;display:inline-block;overflow:hidden;float:left">
+    <table class="easyui-datagrid" id="dlg_tbl_book" title="操作提示：双击列表项添加小说" data-options="toolbar:'#tb_dlg_linkBook',fit:true,onDblClickRow:addToBookLink">
+      <thead>
+        <tr>
+          <th data-options="field:'selector',checkbox:true"></th>
+          <th data-options="field:'id',width:50,halign:'center',align:'center',hidden:true">编号</th>
+      	  <th data-options="field:'name',width:176,halign:'center',align:'center'">书名</th>
+	    </tr>
+      </thead>
+    </table>
+    <div id="tb_dlg_linkBook">
+      <input class="easyui-textbox" style="width:140px;" id="book_name" name="book_name" data-options="prompt:'输入书名快速查找'"/>
+      <a class="easyui-linkbutton" iconCls="icon-search" id="a_text">查找</a>
+	</div>
+  </div>
+</div>
+<div id="bt_dlg_carousel">
+  <a class="easyui-linkbutton" iconCls="icon-email" id="a_save">保存</a>
+  <a class="easyui-linkbutton" iconCls="icon-no" onclick="javascript:$('#dlg_carousel').dialog('close')">关闭</a>
+</div>

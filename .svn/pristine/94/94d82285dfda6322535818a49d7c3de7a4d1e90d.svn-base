@@ -1,0 +1,34 @@
+package com.lemon.test;
+
+import java.util.List;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.lemon.dao.UserMapper;
+import com.lemon.pojo.User;
+import com.lemon.pojo.UserExample;
+import com.lemon.pojo.UserExample.Criteria;
+
+
+public class mapperTest {
+	public static void main(String[] args) {
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+		UserMapper userMapper = (UserMapper) applicationContext.getBean("userMapper");
+		//User user = new User();
+		UserExample example = new UserExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andNameEqualTo("张荣娣");
+		List<User> list = userMapper.selectByExample(example);
+		System.out.println(list.size());
+		//user.setName("张文彬");
+		//user.setPassword(22222);
+		//System.out.println("之前"+user.getId());
+		//userMapper.insert(user);
+		//System.out.println("之后"+user.getId());
+	}
+
+}

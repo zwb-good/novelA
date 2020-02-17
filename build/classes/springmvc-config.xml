@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       <context:component-scan base-package="com.lemon.controller"></context:component-scan>
+       
+       <mvc:annotation-driven>
+	     <mvc:message-converters>
+		   <bean
+		    class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+			  <property name="objectMapper">
+			    <ref bean="myObjectMapper"/>
+			  </property>
+			  <property name="supportedMediaTypes">
+			    <list>
+        		  <!-- 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 -->
+				  <value>text/html;charset=UTF-8</value>
+				  <value>text/json;charset=UTF-8</value>
+				  <value>application/json;charset=UTF-8</value>
+			    </list>
+			  </property>
+		  </bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+ 	<bean id="conversionService"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+	  <property name="converters">
+	    <set>
+	      <bean class="com.lemon.utils.DateConvert"/>
+	    </set>
+	  </property>	
+	</bean>
+        
+                 <!-- 视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <property name="prefix" value="/WEB-INF/jsp/"/>
+      <property name="suffix" value=".jsp"/>
+    </bean>
+    
+	<!-- <mvc:default-servlet-handler />  -->
+        
+<!--      	配置文件上传解析器 MultipartResolver
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+          设置请求编码格式 
+          <property name="defaultEncoding" value="UTF-8" />
+	</bean> -->
+     	
+         
+</beans>

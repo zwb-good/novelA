@@ -1,0 +1,36 @@
+.title{
+	font-family:"微软雅黑";
+	margin-top:200px; 
+}
+tr{
+	height:50px;
+	line-height:50px;
+}
+.td-lable{
+	text-align:right;
+	font-size:20px;
+	font-family:"微软雅黑";
+}
+#userName{
+	width:200px;
+	height:25px;
+	border: 1px solid black;
+    border-radius: 10px 10px 10px 10px;
+    text-align:center;
+}
+#pwd{
+	width:200px;
+	height:25px;
+	border: 1px solid black;
+    border-radius: 10px 10px 10px 10px;
+    text-align:center;
+}
+.button{
+	margin-left:50px;
+	width:80px;
+	height:35px;
+	font-size:16px;
+	border-radius: 10px 10px 10px 10px;
+    text-align:center;
+    background: #88e2d6;
+}

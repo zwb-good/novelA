@@ -1,0 +1,10 @@
+package com.lemon.service;
+
+import com.lemon.pojo.Reader;
+
+public interface ReaderService {
+	
+	public boolean addReader(Reader reader) throws Exception;
+	
+	public int update(Reader reader) throws Exception;
+}

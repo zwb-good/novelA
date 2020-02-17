@@ -1,0 +1,53 @@
+package com.lemon.service;
+
+import java.lang.reflect.Method;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.lemon.dao.CommentMapper;
+import com.lemon.pojo.Comment;
+import com.lemon.pojo.CommentExample;
+import com.lemon.pojo.CommentExample.Criteria;
+
+@Service
+public class CommentServiceImpl implements CommentService {
+	@Autowired
+	private CommentMapper commentMapper;
+	
+	@Override
+	public int insert(Comment comment) throws Exception {
+		return commentMapper.insertSelective(comment);
+	}
+	
+	@Override
+	public List<Comment> select(Integer bookId) throws Exception {
+		String sql = "(comment.bookId = '" + bookId +"')";
+		
+		CommentExample example = new CommentExample();
+		Criteria criteria = example.createCriteria();
+		
+		Class<?> criteriaCls = CommentExample.Criteria.class;
+		Class<?> generatedCriteriaCls = criteriaCls.getSuperclass();
+		Method addCriterion = generatedCriteriaCls.getDeclaredMethod("addCriterion", String.class);
+		addCriterion.setAccessible(true);
+		addCriterion.invoke(criteria, sql);
+		return commentMapper.selectByExampleAndReader(example);
+	}
+	
+	@Override
+	public List<Comment> selectByCommentId(Integer commentId) throws Exception {
+		String sql = "(comment.id = '" + commentId +"')";
+		
+		CommentExample example = new CommentExample();
+		Criteria criteria = example.createCriteria();
+		
+		Class<?> criteriaCls = CommentExample.Criteria.class;
+		Class<?> generatedCriteriaCls = criteriaCls.getSuperclass();
+		Method addCriterion = generatedCriteriaCls.getDeclaredMethod("addCriterion", String.class);
+		addCriterion.setAccessible(true);
+		addCriterion.invoke(criteria, sql);
+		return commentMapper.selectByExampleAndReader(example);
+	}
+}

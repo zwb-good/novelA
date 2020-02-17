@@ -1,0 +1,16 @@
+﻿<% String panelIndex=request.getParameter("panelIndex");%>
+<div class="easyui-accordion">
+  <div title="页面管理" <%if("0".equals(panelIndex)){%> data-options="selected:true"<%}%> style="overflow:auto;padding:10px;">
+    <a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true,iconCls:'icon-tip'" class="easyui-linkbutton" href="pageManage.jsp">引导管理</a>
+	<a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true" class="easyui-linkbutton" href="#">首页管理</a>
+	<a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true" class="easyui-linkbutton" href="#">分类管理</a>
+	<a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true" class="easyui-linkbutton" href="#">推荐管理</a>
+  </div>
+  <div title="书籍管理" <%if("1".equals(panelIndex)){%> data-options="selected:true"<%}%> style="overflow:auto;padding:10px;">
+    <a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true" class="easyui-linkbutton" href="bookManage.jsp">书库管理</a>
+	<a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true" class="easyui-linkbutton" href="#">写书审核</a>
+  </div>
+  <div title="用户管理" <%if("2".equals(panelIndex)){%> data-options="selected:true"<%}%> style="overflow:auto;padding:10px;">
+	<a style="width:100%;text-align:left;font-family:微软雅黑" data-options="plain:true" class="easyui-linkbutton" href="userManage.jsp">读者管理</a>
+  </div>
+</div>

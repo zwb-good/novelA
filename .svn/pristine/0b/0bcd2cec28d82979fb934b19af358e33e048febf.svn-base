@@ -1,0 +1,66 @@
+/*---------------------------页面初始化代码--------------------------------*/
+/**
+ * <summary>页面加载时获取引导页信息</summary>
+ */
+$(document).ready(function(){
+  var objName = "#tbl_user";
+  var URL = "ReaderAction/get.do";
+  searchRecords(objName,URL);
+})
+
+//格式化用户
+function formatUserName(val,row){
+  val = row.user.name;
+  return val;
+}
+/*---------------------------页面按钮相关代码--------------------------------*/
+var op; //1-添加;2-修改;
+
+/**
+ * <summary>点击查询按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_search").click(function(){
+    var condition = $("#title").textbox('getValue');
+    $("#tbl_user").datagrid({
+      url:"ReaderAction/searchch.do",
+      queryParams:{condition:condition},
+      onLoadSuccess:function(data){}
+    });
+  })
+})
+
+/**
+ * <summary>点击修改按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_update").click(function(){
+	var row = $("#tbl_user").datagrid("getSelected");
+    if (row == null){showMessage("提示","请选择需要修改的记录",2000);return;}
+    $("#fm_user").form("load",row);
+    $("#dlg_user").dialog("open");
+    op = 2;
+  })
+})
+
+/**
+ * <summary>点击删除按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_delete").click(function(){
+	var row = $("#tbl_user").datagrid("getSelected");
+    if (row == null){showMessage("提示","请选择需要删除的记录",2000);return;}
+    var id = row.id;
+    $.messager.confirm('提示', '确认要删除吗?', function(r){
+      if(r){
+        $.post("ReaderAction/delete.do",{id:id},function(result){
+          var data = JSON.parse(result);
+          showMessage("提示",data.msg,2000);
+          $("#tbl_user").datagrid("reload");  
+        });
+      }
+    })
+  })
+})
+
+/*---------------------页面dialog对话框按钮相关代码--------------------------*/

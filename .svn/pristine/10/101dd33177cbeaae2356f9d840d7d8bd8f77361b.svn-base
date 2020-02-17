@@ -1,0 +1,11 @@
+package com.lemon.service;
+
+
+import java.util.List;
+
+import com.lemon.pojo.Bookshop;
+
+public interface BookShopService {
+	
+	public List<Bookshop> getBookshop() throws Exception;
+}

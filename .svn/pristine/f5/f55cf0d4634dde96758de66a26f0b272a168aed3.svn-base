@@ -1,0 +1,27 @@
+package com.lemon.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.lemon.pojo.Bookshop;
+import com.lemon.service.BookShopService;
+import com.lemon.utils.JsonRs;
+
+@Controller
+@RequestMapping("/BookshopAction")
+public class BookshopController {
+
+	@Autowired
+	private BookShopService bookShopService;
+	
+	@RequestMapping("/getBook")
+	@ResponseBody
+	public JsonRs getBook() throws Exception{
+		List<Bookshop> list = bookShopService.getBookshop();
+		return new JsonRs("查询成功", true, list.size(), list);
+	}
+}

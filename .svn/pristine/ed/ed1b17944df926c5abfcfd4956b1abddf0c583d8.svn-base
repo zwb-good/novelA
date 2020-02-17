@@ -1,0 +1,77 @@
+/*---------------------------页面初始化代码--------------------------------*/
+/**
+ * <summary>页面加载时获取引导页信息</summary>
+ */
+$(document).ready(function(){
+  var objName = "#tbl_novelType";
+  var URL = "NovelTypeAction/get.do";
+  searchRecords(objName,URL);
+})
+
+/*---------------------------页面按钮相关代码--------------------------------*/
+var op; //1-添加;2-修改;
+
+/**
+ * <summary>点击添加按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_insert").click(function(){
+	$("#dlg_sort").dialog("open");
+	getLabel();
+	op = 1;
+  })
+})
+
+/**
+ * <summary>点击修改按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_update").click(function(){
+	var row = $("#tbl_novelType").datagrid("getSelected");
+    if (row == null){showMessage("提示","请选择需要修改的记录",2000);return;}
+    $("#dlg_sort").dialog("open");
+	getLabel();
+	op = 2;
+  })
+})
+
+/**
+ * <summary>点击删除按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_delete").click(function(){
+	var row = $("#tbl_novelType").datagrid("getSelected");
+    if (row == null){showMessage("提示","请选择需要删除的记录",2000);return;}
+    var id = row.id;
+    $.messager.confirm('提示', '确认要删除吗?', function(r){
+      if(r){
+        $.post("NovelTypeAction/delete.do",{id:id},function(result){
+          var data = JSON.parse(result);
+          showMessage("提示",data.msg,2000);
+          $("#tbl_novelType").datagrid("reload");  
+        });
+      }
+    })
+  })
+})
+
+//获取标签表格数据
+function getLabel(){
+  var objName = "#dlg_tbl_noSelected";
+  var URL = "LabelAction/get.do";
+  searchRecords(objName,URL);
+}
+/*---------------------页面dialog对话框按钮相关代码--------------------------*/
+//双击添加小说
+function addToLabel(index,row){
+  var rows = $("#tbl_selected").datagrid('getRows');
+  for(var i=0;i<=rows.length-1;i++){
+    if(row.id==rows[i].id){$.messager.alert("提示","请勿重复加入！",'info');return;}
+  }
+  $("#tbl_selected").datagrid('appendRow',row);
+}  
+  
+//双击右侧小说列表，移除小说
+function removeFromLabel(index,row){      
+  $("#tbl_selected").datagrid('deleteRow',index);
+}

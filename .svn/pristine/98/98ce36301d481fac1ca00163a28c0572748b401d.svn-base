@@ -1,0 +1,30 @@
+package com.lemon.dao;
+
+import com.lemon.pojo.Replaycomment;
+import com.lemon.pojo.ReplaycommentExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+public interface ReplaycommentMapper {
+    long countByExample(ReplaycommentExample example);
+
+    int deleteByExample(ReplaycommentExample example);
+
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(Replaycomment record);
+
+    int insertSelective(Replaycomment record);
+
+    List<Replaycomment> selectByExample(ReplaycommentExample example);
+
+    Replaycomment selectByPrimaryKey(Integer id);
+
+    int updateByExampleSelective(@Param("record") Replaycomment record, @Param("example") ReplaycommentExample example);
+
+    int updateByExample(@Param("record") Replaycomment record, @Param("example") ReplaycommentExample example);
+
+    int updateByPrimaryKeySelective(Replaycomment record);
+
+    int updateByPrimaryKey(Replaycomment record);
+}

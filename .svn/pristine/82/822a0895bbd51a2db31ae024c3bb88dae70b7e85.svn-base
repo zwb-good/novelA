@@ -1,0 +1,39 @@
+package com.lemon.service;
+
+import java.lang.reflect.Method;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.lemon.dao.ReplaycommentMapper;
+import com.lemon.pojo.CommentExample;
+import com.lemon.pojo.Replaycomment;
+import com.lemon.pojo.ReplaycommentExample;
+import com.lemon.pojo.ReplaycommentExample.Criteria;
+
+@Service
+public class ReplayCommentServiceImpl implements ReplayCommentService {
+	@Autowired
+	private ReplaycommentMapper replaycommentMapper;
+	
+	@Override
+	public List<Replaycomment> getByPhone(Integer commentId) throws Exception {
+		String sql = "(replaycomment.commentId = '" + commentId +"')";
+		
+		ReplaycommentExample example = new ReplaycommentExample();
+		Criteria criteria = example.createCriteria();
+		
+		Class<?> criteriaCls = ReplaycommentExample.Criteria.class;
+		Class<?> generatedCriteriaCls = criteriaCls.getSuperclass();
+		Method addCriterion = generatedCriteriaCls.getDeclaredMethod("addCriterion", String.class);
+		addCriterion.setAccessible(true);
+		addCriterion.invoke(criteria, sql);
+		return replaycommentMapper.selectByExampleAndComment(example);
+	}
+	
+	@Override
+	public int insert(Replaycomment replaycomment) throws Exception {
+		return replaycommentMapper.insertSelective(replaycomment);
+	}
+}

@@ -1,0 +1,63 @@
+package com.lemon.pojo;
+
+public class Reader {
+    private Integer id;
+
+    private String name;
+
+    private String sex;
+
+    private String signature;
+
+    private String headurl;
+
+    private Integer userid;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex == null ? null : sex.trim();
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature == null ? null : signature.trim();
+    }
+
+    public String getHeadurl() {
+        return headurl;
+    }
+
+    public void setHeadurl(String headurl) {
+        this.headurl = headurl == null ? null : headurl.trim();
+    }
+
+    public Integer getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Integer userid) {
+        this.userid = userid;
+    }
+}

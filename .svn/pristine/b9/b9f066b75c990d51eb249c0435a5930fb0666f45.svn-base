@@ -1,0 +1,18 @@
+package com.lemon.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.lemon.dao.CommentMapper;
+import com.lemon.pojo.Comment;
+
+@Service
+public class CommentServiceImpl implements CommentService {
+	@Autowired
+	private CommentMapper commentMapper;
+	
+	@Override
+	public int insert(Comment comment) throws Exception {
+		return commentMapper.insertSelective(comment);
+	}
+}

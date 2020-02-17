@@ -1,0 +1,42 @@
+package com.lemon.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.lemon.pojo.Book;
+import com.lemon.service.BookService;
+import com.lemon.utils.ChangeIds;
+import com.lemon.utils.JsonMsg;
+import com.lemon.utils.JsonRs;
+
+@Controller
+@RequestMapping("/admin/BookAction")
+public class BookController {
+
+		@Autowired
+		private BookService bookService;
+		
+		@RequestMapping("/select")
+		@ResponseBody
+		public JsonRs selectBook() throws Exception{
+			List<Book> list = bookService.getBook();
+			return new JsonRs("查询成功", false, list.size(), list);
+		}
+		
+		@RequestMapping("/delete")
+		@ResponseBody
+		public JsonMsg deleteByIds(String ids) throws Exception{
+			ChangeIds changeIds = new ChangeIds();
+			int total = bookService.deleteBookByIds(changeIds.toInteger(ids));
+			if(total > 0){
+				return new JsonMsg("删除成功", true);
+			}else {
+				return new JsonMsg("操作失败", false);
+			}
+		}
+}

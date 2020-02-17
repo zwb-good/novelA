@@ -1,0 +1,52 @@
+package com.lemon.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.lemon.dao.BookshopMapper;
+import com.lemon.pojo.Bookshop;
+import com.lemon.pojo.BookshopExample;
+import com.lemon.pojo.BookshopExample.Criteria;
+
+@Service
+public class BookShopServiceImpl implements BookShopService{
+	@Autowired
+	private BookshopMapper bookshopMapper;
+	
+	@Override
+	public List<Bookshop> getBookshop() throws Exception{
+		BookshopExample example = new BookshopExample();
+		example.setOrderByClause("bookshop_position ASC");
+			List<Bookshop> list = bookshopMapper.selectByExampleAndBook(example);
+			return list;
+	}
+	
+	@Override
+	public int deleteBookshopByIds(Integer[] ids) throws Exception{
+		int total = bookshopMapper.deleteByIds(ids);
+		return total;
+	}
+	
+	@Override
+	public int insert(Bookshop bookshop) throws Exception {
+		int total = bookshopMapper.insert(bookshop);
+		return total;
+	}
+	
+	@Override
+	public int updateByPrimaryKeySelective(Bookshop bookshop) throws Exception{
+		int total = bookshopMapper.updateByPrimaryKeySelective(bookshop);
+		return total;
+	}
+	
+	@Override
+	public List<Bookshop> getByPosition(Integer position) throws Exception {
+		BookshopExample example = new BookshopExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andPositionEqualTo(position);
+		return bookshopMapper.selectByExampleAndBook(example);
+	}
+
+}

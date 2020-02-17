@@ -1,0 +1,45 @@
+package com.lemon.controller;
+
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.lemon.pojo.Comment;
+import com.lemon.service.CommentService;
+import com.lemon.utils.JsonMsg;
+import com.lemon.utils.JsonRs;
+
+@Controller
+@RequestMapping("/CommentAction")
+public class CommentController {
+	@Autowired
+	private CommentService commentService;
+	
+	@RequestMapping("/insert")
+	@ResponseBody
+	public void insert(Comment comment,@RequestParam(value = "callback") String callback,
+			HttpServletResponse response) throws Exception {
+		response.setContentType("application/json;charset=utf-8");
+		try {
+			PrintWriter out = response.getWriter();
+			int total = commentService.insert(comment);
+			if(total == 1){
+				out.print(callback + "(" + new Gson().toJson(new JsonMsg("添加成功", true)) + ")");
+			}else {
+				out.print(callback + "(" + new Gson().toJson(new JsonMsg("添加失败", false)) + ")");
+			}
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

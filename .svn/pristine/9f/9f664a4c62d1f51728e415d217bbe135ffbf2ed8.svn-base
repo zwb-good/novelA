@@ -1,0 +1,14 @@
+//表单是否为空检测
+function checkForm(){	
+  var userName = document.getElementById("userName").value;
+  var pwd = document.getElementById("pwd").value;
+  if(userName == ""){
+    alert("请输入用户名!");
+    return false;
+  }
+  if(pwd == ""){
+    alert("请输入密码!");
+    return false;
+  }
+  return true;
+}

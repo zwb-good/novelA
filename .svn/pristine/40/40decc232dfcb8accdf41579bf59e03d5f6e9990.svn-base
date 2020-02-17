@@ -1,0 +1,78 @@
+package com.lemon.controller;
+
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.lemon.pojo.Bookshop;
+import com.lemon.service.BookShopService;
+import com.lemon.utils.ChangeIds;
+import com.lemon.utils.JsonMsg;
+import com.lemon.utils.JsonRs;
+
+@Controller
+@RequestMapping("/admin/BookshopAction")
+public class BookshopController {
+
+	@Autowired
+	private BookShopService bookShopService;
+	
+	@RequestMapping("/getBook.do")
+	@ResponseBody
+	public void getBook(@RequestParam(value = "callback") String callback,
+			HttpServletResponse response) throws Exception{
+		List<Bookshop> list = bookShopService.getBookshop();
+		JsonRs jsonRs = new JsonRs("查询成功", true, list.size(), list);
+		PrintWriter out = response.getWriter();
+		if (callback != null && callback.length() > 0) {
+			out.print(callback + "(" + new Gson().toJson(jsonRs) + ")");
+		} else {
+			out.print(new Gson().toJson(jsonRs));
+		}
+		out.flush();
+		out.close();
+	}
+	
+	@RequestMapping("/delete")
+	@ResponseBody
+	public JsonMsg delete(String ids) throws Exception{
+		ChangeIds changeIds = new ChangeIds();
+		int total = bookShopService.deleteBookshopByIds(changeIds.toInteger(ids));
+		if(total > 0){
+			return new JsonMsg("删除成功", true);
+		}else {
+			return new JsonMsg("操作失败", false);
+		}
+	}
+	
+	@RequestMapping("/insert")
+	@ResponseBody
+	public JsonMsg insert(Bookshop bookshop) throws Exception{
+		int total = bookShopService.insert(bookshop);
+		if(total > 0){
+			return new JsonMsg("添加成功", true);
+		}else {
+			return new JsonMsg("添加失败", false);
+		}
+	}
+	
+	@RequestMapping("/update")
+	@ResponseBody
+	public JsonMsg update(Bookshop bookshop) throws Exception{
+		int total = bookShopService.updateByPrimaryKeySelective(bookshop);
+		if(total > 0){
+			return new JsonMsg("更新成功", true);
+		}else {
+			return new JsonMsg("更新失败", false);
+		}
+	}
+}

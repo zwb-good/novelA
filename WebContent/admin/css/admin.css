@@ -1,0 +1,46 @@
+#bookManage .accordion .accordion-header-selected {
+    background: #cfcfcf;	//设置选中导航栏颜色
+}
+#header{
+	overflow:hidden;
+}
+#header .title{
+    font-size:25px;
+    font-family:'微软雅黑';
+    line-height:75px;
+    color:white;
+    margin-left:80px;
+    letter-spacing:2px;
+}
+.imgBox{
+	height:190px;
+	width:120px;
+	margin:5px 0px 0px 75px;
+	background:white;
+}
+.div-img{
+	height:190px;
+	width:120px;
+}
+.imgHeadBox{
+	height:160px;
+	width:160px;
+	margin:10px 0px 0px 25px;
+	background:white;
+	border-radius:80px;
+}
+.div-head{
+	height:160px;
+	width:160px;
+	border-radius:80px;
+}
+.carouselImg{
+	height:140px;
+	width:226px;
+	margin:10px 0px 0px 65px;
+	background:white;
+}
+.div-carousel{
+	height:140px;
+	width:226px;
+}

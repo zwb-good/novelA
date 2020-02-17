@@ -1,0 +1,46 @@
+package com.lemon.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.lemon.dao.ReaderMapper;
+import com.lemon.pojo.Reader;
+import com.lemon.pojo.ReaderExample;
+import com.lemon.pojo.ReaderExample.Criteria;
+
+@Service
+public class ReaderServiceImpl implements ReaderService {
+	@Autowired
+	private ReaderMapper readerMapper;
+	
+	@Override
+	public boolean addReader(Reader reader) throws Exception{
+		int a = readerMapper.insert(reader);
+		if(a>0){
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	@Override
+	public int update(Reader reader) throws Exception {
+		return readerMapper.updateByPrimaryKeySelective(reader);
+	}
+	
+	@Override
+	public List<Reader> select() throws Exception {
+		return readerMapper.selectByExampleAndUser(null);
+	}
+	
+	@Override
+	public List<Reader> search(Integer userId) throws Exception{
+		ReaderExample example = new ReaderExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andUserIdEqualTo(userId);
+		return readerMapper.selectByExampleAndUser(example);
+	}
+}

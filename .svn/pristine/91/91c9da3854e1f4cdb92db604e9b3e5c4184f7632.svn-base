@@ -1,0 +1,12 @@
+package com.lemon.service;
+
+import com.lemon.pojo.Reader;
+import com.lemon.pojo.User;
+import com.lemon.utils.JsonMsg;
+
+public interface UserService {
+		
+
+	public JsonMsg addUser(User user,Reader reader) throws Exception;
+	
+}

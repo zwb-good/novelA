@@ -1,0 +1,14 @@
+package com.lemon.service;
+
+import java.util.List;
+
+import com.lemon.pojo.Collectbook;
+
+public interface CollectbookService {
+	
+	public List<Collectbook> getCollectbook() throws Exception;
+	
+	public int insert(Collectbook collectbook) throws Exception;
+	
+	public int delete(Integer[] ids) throws Exception;
+}

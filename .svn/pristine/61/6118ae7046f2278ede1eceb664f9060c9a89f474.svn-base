@@ -1,0 +1,267 @@
+/*---------------------------页面初始化代码--------------------------------*/
+var labelData = [];
+/**
+ * <summary>页面加载时获取引导页信息</summary>
+ */
+$(document).ready(function(){
+  getAllLabel();
+  var objName = "#tbl_novelType";
+  var URL = "NoveltypeAction/get.do";
+  searchRecords(objName,URL);
+})
+
+//格式化其他标签
+function formatLabel(val,row){
+  val = "";
+  var arr = row.labelId.split(",");
+  for(var i in arr){
+	for(var j in labelData){
+	  if(arr[i] == labelData[j].id){
+		val +=  labelData[j].name + ",";
+	  }
+	}
+  }
+  return val.substring(0,val.length-1);
+}
+
+//获取标签数据
+function getAllLabel(){
+  $.ajaxSetup({async : false});
+  $.post(
+	"LabelAction/get.do",
+	{},
+	function(result){
+	  var data = JSON.parse(result);
+	  labelData = data.rows;
+	}
+  )
+}
+/*---------------------------页面按钮相关代码--------------------------------*/
+var op; //1-添加;2-修改;
+
+/**
+ * <summary>点击添加按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_insert").click(function(){
+	$("#tbl_selected").datagrid("loadData",[]);
+	$("#fm_sort").form("clear");//清除表单数据
+	$("#dlg_sort").dialog("open");
+	getLabel();
+	op = 1;
+  })
+})
+
+/**
+ * <summary>点击修改按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_update").click(function(){
+	$("#fm_sort").form("reset");//清除表单数据
+	var row = $("#tbl_novelType").datagrid("getSelected");
+    if (row == null){showMessage("提示","请选择需要修改的记录",2000);return;}
+    $("#tbl_selected").datagrid("loadData",[]);
+    var name = row.name;
+    $("#txt_dlg_name").textbox("setValue",name);
+    var url = row.url;
+    $("#txt_dlg_url").textbox("setValue",url);
+    $("#dlg_sort").dialog("open");
+	getLabel();
+	getHadLabel();
+	op = 2;
+  })
+})
+
+/**
+ * <summary>点击删除按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_delete").click(function(){
+	var row = $("#tbl_novelType").datagrid("getSelected");
+    if (row == null){showMessage("提示","请选择需要删除的记录",2000);return;}
+    var id = row.id;
+    $.messager.confirm('提示', '确认要删除吗?', function(r){
+      if(r){
+        $.post("NovelTypeAction/delete.do",{id:id},function(result){
+          var data = JSON.parse(result);
+          showMessage("提示",data.msg,2000);
+          $("#tbl_novelType").datagrid("reload");  
+        });
+      }
+    })
+  })
+})
+
+//获取标签表格数据
+function getLabel(){
+  var objName = "#dlg_tbl_noSelected";
+  var URL = "LabelAction/get.do";
+  searchRecords(objName,URL);
+}
+
+//获取该分类已有标签
+function getHadLabel(){
+  var row = $("#tbl_novelType").datagrid("getSelected");
+  var arr = row.labelId.split(",");
+  for(var i in arr){
+    for(var j in labelData){
+	  if(arr[i] == labelData[j].id){
+		$("#tbl_selected").datagrid('appendRow',{id:labelData[j].id,name:labelData[j].name});
+	  }
+	}
+  }
+}
+/*---------------------页面dialog对话框按钮相关代码--------------------------*/
+//双击添加小说
+function addToLabel(index,row){
+  var rows = $("#tbl_selected").datagrid('getRows');
+  for(var i=0;i<=rows.length-1;i++){
+    if(row.id==rows[i].id){$.messager.alert("提示","请勿重复加入！",'info');return;}
+  }
+  $("#tbl_selected").datagrid('appendRow',row);
+}  
+  
+//双击右侧小说列表，移除小说
+function removeFromLabel(index,row){      
+  $("#tbl_selected").datagrid('deleteRow',index);
+}
+/**
+ * <summary>点击保存按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_save").click(function(){
+	var name = $("#txt_dlg_name").textbox("getValue");
+	var url = $("#txt_dlg_url").textbox("getValue");
+	var label = '';
+	var rows = $("#tbl_selected").datagrid('getRows');
+	for(var i=0;i<=rows.length-1;i++){
+	  label += rows[i].id + ",";
+	}
+	var labelId = label.substring(0,label.length-1);
+	if(op == 1){
+	  $.post(
+		"NovelTypeAction/insert.do",
+		{name:name,url:url,labelId:labelId},
+		function(result){
+		  var date = JSON.parse(result);
+		  var success = data.success;
+		  showMessage("提示",data.msg,2000);
+		  if (success){
+		    $("#tbl_novelType").datagrid("reload");
+		    $("#dlg_sort").dialog("close");
+		  }
+		}
+	  )
+	}
+	if(op == 2){
+	  var id = $("#dlg_id").val(); 
+	  $.post(
+		"NovelTypeAction/update.do",
+		{name:name,url:url,labelId:labelId,id:id},
+		function(result){
+		  var date = JSON.parse(result);
+		  var success = data.success;
+		  showMessage("提示",data.msg,2000);
+		  if (success){
+		    $("#tbl_novelType").datagrid("reload");
+		    $("#dlg_sort").dialog("close");
+		  }
+		}
+	  )
+	}
+  })
+})
+
+//七牛云配置
+var token = null;// 保存token
+var key = null;// 保存上传的文件名
+var timestamp = null;// 时间戳，用于重命名key
+$(document).ready(function(){
+  var uploader = Qiniu.uploader({
+	disable_statistics_report : false, // 禁止自动发送上传统计信息到七牛，默认允许发送
+	runtimes : 'html5,flash,html4', // 上传模式，依次退化
+	browse_button : 'a_upload', // 上传选择文件的点选按钮，必需
+	container : 'dlgImg', // 上传区域DOM的ID，默认是browser_button的父元素
+	max_file_size : '10mb', // 最大文件体积限制
+	flash_swf_url : '/Plupload/js/Moxie.swf', // 引入flash，相对路径
+	dragdrop : false, // 关闭可拖曳上传
+	chunk_size : '4mb', // 分块上传时，每块的体积
+	domain : 'http://pry165fg6.bkt.clouddn.com/', // bucket域名，下载资源时用到，必需
+	get_new_uptoken : true, // 设置上传文件的时候是否每次都重新获取新的uptoken
+	auto_start : false, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
+	max_retries : 3, // 上传失败最大重试次数
+	save_key : false, // 为false则以上传文件的原名命名，否则随机命名，这里推荐false
+	get_new_uptoken:true,//设置上传文件的时候是否每次都重新获取新的token
+	unique_names : false,//自动生成文件名，false保留原文件名上传
+	scope : {
+		bucket : key
+	},
+	// 在初始化时，uptoken，uptoken_url，uptoken_func三个参数中必须有一个被设置,uptoken是上传凭证，由其他程序生成;uptoken_url是提供了获取上传凭证的地址，如果需要定制获取uptoken的过程则可以设置uptoken_func;其优先级为uptoken
+	uptoken_func : function(file) { 
+		// 将key传给服务端获取的七牛token，上传后覆盖同名文件，即为更新操作
+		var val = $("#dlg_imgUrl").val();// val用于保存上传文件的url
+		// 如果val不为空，使用原key，否则创建新key
+		if (val) {
+			// 获取七牛存储的url中的key，比如“imgName.jpg”
+			key = val.split('/')[val.split('/').length - 1];
+		} else {
+			timestamp = (new Date()).valueOf();
+			// 以时间戳重命名图片，方便同名文件覆盖。
+			// 为了防止文件重名，在引入登录功能后还需加上userId这样的前缀
+			key = timestamp + "." + file.type.split("/")[1]; // file.type的格式举例：“Image/jpg”
+		}
+		getToken(key);
+		return token;
+	},
+	init : {
+		'FilesAdded' : function(up, files) { 
+			plupload.each(files, function(file) {
+				// 文件添加进队列后，处理相关的事情
+				var type = file.type;//文件类型
+				var fileName = file.name;//文件名
+				$("#txt_dlg_url").textbox('setValue', fileName);
+			});
+		},
+		'BeforeUpload' : function(up, file) { 
+			// 每个文件上传前，处理相关的事情
+		},
+		'UploadProgress' : function(up, file) { 
+			// 每个文件上传时，处理相关的事情
+			console.log("上传中");
+		},
+		'FileUploaded' : function(up, file, info) { 
+			// 每个文件上传成功后，处理相关的事情
+			var domain = up.getOption('domain');
+			var data = JSON.parse(info.response);
+			$("#dlg_imgUrl").val(domain + data.key);
+			saveData();
+		},
+		'Error' : function(up, err, errTip) {
+			console.log("上传出错")
+		},
+		'UploadComplete' : function() {
+			// 队列文件处理完毕后，处理相关的事情
+		},
+		'Key' : function(up, file) {
+			// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+			// 比如设置了同名文件覆盖上传，那么生成的覆盖上传token的key，必须和上传的key一致
+			return key;
+		}
+	}
+	});
+  uploader.start();
+})
+
+// 获取token
+function getToken(key) {
+  $.ajax({
+	url : 'TokenAction/get.do',
+	type : 'post',
+	async : false,
+	data : {"key" : key },
+	success : function(data) {
+		var obj = JSON.parse(data);
+		token = obj.token;
+	}
+  });
+}

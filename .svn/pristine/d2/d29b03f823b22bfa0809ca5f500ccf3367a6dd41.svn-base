@@ -1,0 +1,14 @@
+#bookManage .accordion .accordion-header-selected {
+    background: #cfcfcf;	//设置选中导航栏颜色
+}
+#header{
+	overflow:hidden;
+}
+#header .title{
+    font-size:25px;
+    font-family:'微软雅黑';
+    line-height:75px;
+    color:white;
+    margin-left:80px;
+    letter-spacing:2px;
+}

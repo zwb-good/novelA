@@ -1,0 +1,43 @@
+﻿<div id="dlg_book" class="easyui-dialog" data-options="closable:false,title:'小说详情',buttons:'#bt_dlg_book'" style="width:480px;height:350px;padding:10px;overflow:hidden" closed="true" >
+  <form id="fm_book" method="post">
+    <div class="fitem">
+      <input name="id" type="hidden">
+    </div>
+    <div class="fitem">
+      <label>小说名称:</label>
+      <input id="txt_dlg_book" name="name" class="easyui-textbox" style="width:380px" prompt="必填项" />
+    </div>
+    <div class="fitem">
+      <label>作者:</label>
+      <input id="txt_dlg_author" name="author" class="easyui-textbox" style="width:380px" prompt="必填项" />
+    </div>
+    <div class="fitem">
+      <label>类型:</label>
+      <input id="cmb_dlg_type" name="type" class="easyui-combobox" style="width:380px" data-options="valueField:'id',textField:'text'"/>
+    </div>
+    <div class="fitem" id="dlgImg">
+      <label>封面地址:</label>
+      <input id="txt_dlg_imgName" name="imgName" class="easyui-textbox" style="width:296px" prompt="点击上传" data-options="editable:false"/>
+      <a class="easyui-linkbutton" data-options="iconCls:'icon-upload'" id="a_upload_img" style="height:21px;">上传</a>
+      <input name="txt_dlg_imgUrl" id="txt_dlg_imgUrl" type="hidden">
+    </div>
+    <div class="fitem" id="dlgCatalogue">
+      <label>目录地址:</label>
+      <input id="txt_dlg_catalogueUrl" name="catalogueUrl" class="easyui-textbox" style="width:296px" prompt="点击上传" data-options="editable:false"/>
+      <a class="easyui-linkbutton" data-options="iconCls:'icon-upload'" id="a_upload_catalogue" style="height:21px;">上传</a>
+    </div>
+    <div class="fitem" id="dlgContent"> 
+      <label>内容地址:</label>
+      <input id="txt_dlg_txtUrl" name="txtUrl" class="easyui-textbox" style="width:296px" prompt="点击上传" data-options="editable:false"/>
+      <a class="easyui-linkbutton" data-options="iconCls:'icon-upload'" id="a_upload_content" style="height:21px;">上传</a>
+    </div>
+    <div class="fitem">
+      <label>小说摘要:</label>
+      <textarea name="abstractText" id="txt_dlg_abstractText" class="easyui-textbox" data-options="multiline:true" style="width:380px;height:70px;"></textarea>
+    </div>
+  </form>
+</div>
+  <div id="bt_dlg_book">
+    <a class="easyui-linkbutton" iconCls="icon-email" id="a_save">保存</a>
+    <a class="easyui-linkbutton" iconCls="icon-no" onclick="javascript:$('#dlg_book').dialog('close')">关闭</a>
+  </div>

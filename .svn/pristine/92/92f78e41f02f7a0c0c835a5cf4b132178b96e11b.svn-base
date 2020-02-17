@@ -1,0 +1,40 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>登录</title>
+  <link rel="stylesheet" type="text/css" href="admin/css/login.css">
+  <script type="text/javascript" src="admin/js/login.js"></script>
+</head>
+<body  bgcolor="#00ccff">
+  <center>
+    <div class="title">
+  	  <h1>书年app后台管理系统</h1>
+  	  <h2>管理员登录</h2>
+  	</div>
+   	<div>
+   	  <h2><font color="red">${loginError}</font></h2>
+   	  <form action="#" method="post" onsubmit="return checkForm()">
+   		<table>
+   		  <tr>
+   			<td class="td-lable">用户名：</td>
+   			<td><input id="userName" name="num" size="20" type="text"/></td>
+   		  </tr>
+   		  <tr>
+   			<td class="td-lable">密码：</td>
+   			<td><input id="pwd"  name="pwd" size="22" type="password"/></td>
+   		  </tr>
+   		  <tr>
+   			<td colspan="2" align="center">
+   			  <input class="button" type="submit" value="登录" id="tb_submit"/>
+   			  <input class="button" type="reset" value="重置"/>
+   			</td>
+   		  </tr>	
+   		</table>
+	  </form>
+   	</div>
+  </center>
+</body>
+</html>

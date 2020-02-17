@@ -1,0 +1,21 @@
+﻿<!-- 轮播图的数据表格 -->      
+<table id="tbl_carousel" class="easyui-datagrid" data-options="singleSelect:true,fit:true,toolbar:'#tb_carousel'">
+  <thead>
+    <tr>
+      <th data-options="field:'selector',checkbox:true"></th>
+      <th data-options="field:'id',width:40,align:'center',hidden:true">编号</th>
+      <th data-options="field:'type',width:120,align:'center'">所在页面</th>
+      <th data-options="field:'position',width:200,align:'center'">页面位置</th>
+      <th data-options="field:'url',width:100,align:'center'">图片地址</th>
+      <th data-options="field:'book',width:100,align:'center'">链接小说</th>
+    </tr>
+  </thead>
+</table>
+<!-- 工具栏 -->
+<div id="tb_carousel" style="padding:5px;">
+  <input class="easyui-textbox" style="width:160px;" id="title" data-options="prompt:'书名/作者/类型'"/>
+  <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" id="a_search">查询</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" id="a_insert">添加</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" id="a_update">修改</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" id="a_delete">删除</a>
+</div>

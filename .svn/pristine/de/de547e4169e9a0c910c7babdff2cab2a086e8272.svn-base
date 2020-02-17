@@ -1,0 +1,12 @@
+package com.lemon.service;
+
+import java.util.List;
+
+import com.lemon.pojo.Replaycomment;
+
+public interface ReplayCommentService {
+	
+	public List<Replaycomment> getByPhone(Integer commentId) throws Exception;
+	
+	public int insert(Replaycomment replaycomment) throws Exception;
+}

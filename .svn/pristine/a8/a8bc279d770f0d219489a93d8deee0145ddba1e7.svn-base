@@ -1,0 +1,29 @@
+package com.lemon.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.lemon.dao.ReaderMapper;
+import com.lemon.pojo.Reader;
+
+@Service
+public class ReaderServiceImpl implements ReaderService {
+	@Autowired
+	private ReaderMapper readerMapper;
+	
+	@Override
+	public boolean addReader(Reader reader) throws Exception{
+		int a = readerMapper.insert(reader);
+		if(a>0){
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	@Override
+	public int update(Reader reader) throws Exception {
+		return readerMapper.updateByPrimaryKeySelective(reader);
+	}
+}

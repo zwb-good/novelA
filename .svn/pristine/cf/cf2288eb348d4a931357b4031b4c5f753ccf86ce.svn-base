@@ -1,0 +1,27 @@
+package com.lemon.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.lemon.pojo.Noveltype;
+import com.lemon.service.NoveltypeService;
+import com.lemon.utils.JsonRs;
+
+@Controller
+@RequestMapping("/admin/NoveltypeAction")
+public class NoveltypeController {
+	
+	@Autowired
+	private NoveltypeService noveltypeService;
+	
+	@RequestMapping("/get")
+	@ResponseBody
+	public JsonRs get() throws Exception {
+		List<Noveltype> list = noveltypeService.get();
+		return new JsonRs("查询成功", true, list.size(), list);
+	}
+}

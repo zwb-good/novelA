@@ -1,0 +1,375 @@
+/*---------------------------页面初始化代码--------------------------------*/
+/**
+ * <summary>页面加载时获取引导页信息</summary>
+ */
+$(document).ready(function(){
+  var objName = "#tbl_book";
+  var URL = "BookAction/select.do";
+  searchRecords(objName,URL);
+})
+
+//格式化类型
+function formatType(val,row){
+  val = row.noveltype.name;
+  return val;
+}
+
+//格式化封面地址
+function formatImg(val,row){
+  var url = row.url;
+  var id = row.id
+  val = url + "/" + id + "/img";
+  return val;
+}
+
+//格式化目录地址
+function formatCatalogue(val,row){
+  var url = row.url;
+  var id = row.id
+  val = url + "/" + id + "/catalogue";
+  return val;
+}
+
+//格式化内容地址
+function formatTxt(val,row){
+  var url = row.url;
+  var id = row.id
+  val = url + "/" + id + "/txt";
+  return val;
+}
+/*---------------------------页面按钮相关代码--------------------------------*/
+/**
+ * <summary>点击查询按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_search").click(function(){
+    var condition = $("#title").textbox('getValue');
+    $("#tbl_book").datagrid({
+      url:"BookAction/search.do",
+      queryParams:{condition:condition},
+      onLoadSuccess:function(data){}
+    }); 
+  })
+})
+
+
+/**
+ * <summary>点击添加按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_insert").click(function(){
+	$("#fm_book").form("clear");//清除表单数据
+	$("#dlg_book").dialog("open");
+	getType();
+  })
+})
+
+/**
+ * <summary>点击修改按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_update").click(function(){
+	$("#fm_book").form("reset");//清除表单数据
+	var row = $("#tbl_book").datagrid("getSelected");
+    if (row == null){showMessage("提示","请选择需要修改的记录",2000);return;}
+	getType();
+	var bookName = row.name;
+	$("#txt_dlg_book").textbox("setValue",bookName);
+	var author = row.author;
+	$("#txt_dlg_author").textbox("setValue",author);
+	var type = row.noveltype.name;
+	$("#cmb_dlg_type").combobox('select',type);
+	var imgUrl = row.url + "/" + row.id +"/img";
+	$("#txt_dlg_imgUrl").textbox("setValue",imgUrl);
+	var catalogue = row.url + "/" + row.id +"/catalogue";
+	$("#txt_dlg_catalogueUrl").textbox("setValue",catalogue);
+	var text = row.url + "/" + row.id +"/txt";
+	$("#txt_dlg_txtUrl").textbox("setValue",text);
+	var abstractText = row.abstractText;
+	$("#txt_dlg_abstractText").textbox("setValue",abstractText);
+	
+	$("#dlg_book").dialog("open");
+	//$("#fm_book").form("load",row);
+  })
+})
+
+/**
+ * <summary>点击删除按钮事件</summary>
+ */
+$(document).ready(function(){
+  $("#a_delete").click(function(){
+	var row = $("#tbl_book").datagrid("getSelected");
+    if (row == null){showMessage("提示","请选择需要删除的记录",2000);return;}
+    var id = row.id;
+    $.messager.confirm('提示', '确认要删除吗?', function(r){
+      if(r){
+        $.post("BookAction/delete.do",{id:id},function(result){
+          var data = JSON.parse(result);
+          showMessage("提示",data.msg,2000);
+          $("#tbl_book").datagrid("reload");  
+        });
+      }
+    })
+  })
+})
+
+//获取分类表格数据
+function getType(){
+  var objName = "#dlg_tbl_noSelected";
+  var URL = "NovelTypeAction/get.do";
+  searchRecords(objName,URL);
+  $.post(
+	"NovelTypeAction/get.do",
+	{},
+	function(result){
+	  var data = JSON.parse(result);
+	  if(data.success){
+		datas = [];
+		datas.push({"text":"请选择分类","id":"","selected":true});
+		$.each(data.rows[0].members,function(idx,item){
+	      datas.push({"text":item.name,"id":item.id}); 
+	    });
+		$("#cmb_dlg_type").combobox("loadData", datas);
+	  }
+	}
+  )
+}
+/*---------------------页面dialog对话框按钮相关代码--------------------------*/
+
+
+//七牛云配置
+var token = null;// 保存token
+var key = null;// 保存上传的文件名
+var timestamp = null;// 时间戳，用于重命名key
+// 配置七牛上传和plupload
+//封面上传按钮
+var uploader1 = Qiniu.uploader({
+	disable_statistics_report : false, // 禁止自动发送上传统计信息到七牛，默认允许发送
+	runtimes : 'html5,flash,html4', // 上传模式，依次退化
+	browse_button : 'a_upload_img', // 上传选择文件的点选按钮，必需
+	container : 'dlgImg', // 上传区域DOM的ID，默认是browser_button的父元素
+	max_file_size : '10mb', // 最大文件体积限制
+	flash_swf_url : '/Plupload/js/Moxie.swf', // 引入flash，相对路径
+	dragdrop : false, // 关闭可拖曳上传
+	chunk_size : '4mb', // 分块上传时，每块的体积
+	domain : 'http://pry165fg6.bkt.clouddn.com/', // bucket域名，下载资源时用到，必需
+	get_new_uptoken : true, // 设置上传文件的时候是否每次都重新获取新的uptoken
+	auto_start : false, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
+	max_retries : 3, // 上传失败最大重试次数
+	save_key : false, // 为false则以上传文件的原名命名，否则随机命名，这里推荐false
+	get_new_uptoken:true,//设置上传文件的时候是否每次都重新获取新的token
+	unique_names : false,//自动生成文件名，false保留原文件名上传
+	scope : {
+		bucket : key
+	},
+	// 在初始化时，uptoken，uptoken_url，uptoken_func三个参数中必须有一个被设置,uptoken是上传凭证，由其他程序生成;uptoken_url是提供了获取上传凭证的地址，如果需要定制获取uptoken的过程则可以设置uptoken_func;其优先级为uptoken
+	uptoken_func : function(file) { 
+		// 将key传给服务端获取的七牛token，上传后覆盖同名文件，即为更新操作
+		var val = $("#dlg_imgUrl").val();// val用于保存上传文件的url
+		// 如果val不为空，使用原key，否则创建新key
+		if (val) {
+			// 获取七牛存储的url中的key，比如“imgName.jpg”
+			key = val.split('/')[val.split('/').length - 1];
+		} else {
+			timestamp = (new Date()).valueOf();
+			// 以时间戳重命名图片，方便同名文件覆盖。
+			// 为了防止文件重名，在引入登录功能后还需加上userId这样的前缀
+			key = timestamp + "." + file.type.split("/")[1]; // file.type的格式举例：“Image/jpg”
+		}
+		getToken(key);
+		return token;
+	},
+	init : {
+		'FilesAdded' : function(up, files) { 
+			// 文件添加进队列后，处理相关的事情
+			plupload.each(files, function(file) {
+			  var type = file.type;//文件类型
+			  var fileName = file.name;//文件名
+			});
+		},
+		'BeforeUpload' : function(up, file) { 
+			// 每个文件上传前，处理相关的事情
+		},
+		'UploadProgress' : function(up, file) { 
+			// 每个文件上传时，处理相关的事情
+			console.log("上传中");
+		},
+		'FileUploaded' : function(up, file, info) { 
+			// 每个文件上传成功后，处理相关的事情
+			var domain = up.getOption('domain');
+			var data = JSON.parse(info.response);
+			$("#txt_dlg_img").val(domain + data.key);
+			//saveData();
+		},
+		'Error' : function(up, err, errTip) {
+			console.log("上传出错")
+		},
+		'UploadComplete' : function() {
+			// 队列文件处理完毕后，处理相关的事情
+		},
+		'Key' : function(up, file) {
+			// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+			// 比如设置了同名文件覆盖上传，那么生成的覆盖上传token的key，必须和上传的key一致
+			return key;
+		}
+	}
+});
+//内容上传按钮
+var uploader2 = Qiniu.uploader({
+	disable_statistics_report : false, // 禁止自动发送上传统计信息到七牛，默认允许发送
+	runtimes : 'html5,flash,html4', // 上传模式，依次退化
+	browse_button : 'a_upload_content', // 上传选择文件的点选按钮，必需
+	container : 'dlgContent', // 上传区域DOM的ID，默认是browser_button的父元素
+	max_file_size : '10mb', // 最大文件体积限制
+	flash_swf_url : '/Plupload/js/Moxie.swf', // 引入flash，相对路径
+	dragdrop : false, // 关闭可拖曳上传
+	chunk_size : '4mb', // 分块上传时，每块的体积
+	domain : 'http://pry165fg6.bkt.clouddn.com/', // bucket域名，下载资源时用到，必需
+	get_new_uptoken : true, // 设置上传文件的时候是否每次都重新获取新的uptoken
+	auto_start : false, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
+	max_retries : 3, // 上传失败最大重试次数
+	save_key : false, // 为false则以上传文件的原名命名，否则随机命名，这里推荐false
+	get_new_uptoken:true,//设置上传文件的时候是否每次都重新获取新的token
+	unique_names : false,//自动生成文件名，false保留原文件名上传
+	scope : {
+		bucket : key
+	},
+	// 在初始化时，uptoken，uptoken_url，uptoken_func三个参数中必须有一个被设置,uptoken是上传凭证，由其他程序生成;uptoken_url是提供了获取上传凭证的地址，如果需要定制获取uptoken的过程则可以设置uptoken_func;其优先级为uptoken
+	uptoken_func : function(file) { 
+		// 将key传给服务端获取的七牛token，上传后覆盖同名文件，即为更新操作
+		var val = $("#dlg_imgUrl").val();// val用于保存上传文件的url
+		// 如果val不为空，使用原key，否则创建新key
+		if (val) {
+			// 获取七牛存储的url中的key，比如“imgName.jpg”
+			key = val.split('/')[val.split('/').length - 1];
+		} else {
+			timestamp = (new Date()).valueOf();
+			// 以时间戳重命名图片，方便同名文件覆盖。
+			// 为了防止文件重名，在引入登录功能后还需加上userId这样的前缀
+			key = timestamp + "." + file.type.split("/")[1]; // file.type的格式举例：“Image/jpg”
+		}
+		getToken(key);
+		return token;
+	},
+	init : {
+		'FilesAdded' : function(up, files) { 
+			plupload.each(files, function(file) {
+			// 文件添加进队列后，处理相关的事情
+			  var type = file.type;//文件类型
+		      var fileName = file.name;//文件名
+			});
+		},
+		'BeforeUpload' : function(up, file) { 
+			// 每个文件上传前，处理相关的事情
+		},
+		'UploadProgress' : function(up, file) { 
+			// 每个文件上传时，处理相关的事情
+			console.log("上传中");
+		},
+		'FileUploaded' : function(up, file, info) { 
+			// 每个文件上传成功后，处理相关的事情
+			var domain = up.getOption('domain');
+			var data = JSON.parse(info.response);
+			$("#txt_dlg_content").val(domain + data.key);
+			//saveData();
+		},
+		'Error' : function(up, err, errTip) {
+			console.log("上传出错")
+		},
+		'UploadComplete' : function() {
+			// 队列文件处理完毕后，处理相关的事情
+		},
+		'Key' : function(up, file) {
+			// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+			// 比如设置了同名文件覆盖上传，那么生成的覆盖上传token的key，必须和上传的key一致
+			return key;
+		}
+	}
+});
+
+//目录上传按钮
+var uploader3 = Qiniu.uploader({
+	disable_statistics_report : false, // 禁止自动发送上传统计信息到七牛，默认允许发送
+	runtimes : 'html5,flash,html4', // 上传模式，依次退化
+	browse_button : 'a_upload_catalogue', // 上传选择文件的点选按钮，必需
+	container : 'dlgCatalogue', // 上传区域DOM的ID，默认是browser_button的父元素
+	max_file_size : '10mb', // 最大文件体积限制
+	flash_swf_url : '/Plupload/js/Moxie.swf', // 引入flash，相对路径
+	dragdrop : false, // 关闭可拖曳上传
+	chunk_size : '4mb', // 分块上传时，每块的体积
+	domain : 'http://pry165fg6.bkt.clouddn.com/', // bucket域名，下载资源时用到，必需
+	get_new_uptoken : true, // 设置上传文件的时候是否每次都重新获取新的uptoken
+	auto_start : false, // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
+	max_retries : 3, // 上传失败最大重试次数
+	save_key : false, // 为false则以上传文件的原名命名，否则随机命名，这里推荐false
+	get_new_uptoken:true,//设置上传文件的时候是否每次都重新获取新的token
+	unique_names : false,//自动生成文件名，false保留原文件名上传
+	scope : {
+		bucket : key
+	},
+	// 在初始化时，uptoken，uptoken_url，uptoken_func三个参数中必须有一个被设置,uptoken是上传凭证，由其他程序生成;uptoken_url是提供了获取上传凭证的地址，如果需要定制获取uptoken的过程则可以设置uptoken_func;其优先级为uptoken
+	uptoken_func : function(file) { 
+		// 将key传给服务端获取的七牛token，上传后覆盖同名文件，即为更新操作
+		var val = $("#dlg_imgUrl").val();// val用于保存上传文件的url
+		// 如果val不为空，使用原key，否则创建新key
+		if (val) {
+			// 获取七牛存储的url中的key，比如“imgName.jpg”
+			key = val.split('/')[val.split('/').length - 1];
+		} else {
+			timestamp = (new Date()).valueOf();
+			// 以时间戳重命名图片，方便同名文件覆盖。
+			// 为了防止文件重名，在引入登录功能后还需加上userId这样的前缀
+			key = timestamp + "." + file.type.split("/")[1]; // file.type的格式举例：“Image/jpg”
+		}
+		getToken(key);
+		return token;
+	},
+	init : {
+		'FilesAdded' : function(up, files) { 
+			plupload.each(files, function(file) {
+				// 文件添加进队列后，处理相关的事情
+				var type = file.type;//文件类型
+				var fileName = file.name;//文件名
+			});
+		},
+		'BeforeUpload' : function(up, file) { 
+			// 每个文件上传前，处理相关的事情
+		},
+		'UploadProgress' : function(up, file) { 
+			// 每个文件上传时，处理相关的事情
+			console.log("上传中");
+		},
+		'FileUploaded' : function(up, file, info) { 
+			// 每个文件上传成功后，处理相关的事情
+			var domain = up.getOption('domain');
+			var data = JSON.parse(info.response);
+			$("#txt_dlg_catalogueUrl").val(domain + data.key);
+			//saveData();
+		},
+		'Error' : function(up, err, errTip) {
+			console.log("上传出错")
+		},
+		'UploadComplete' : function() {
+			// 队列文件处理完毕后，处理相关的事情
+		},
+		'Key' : function(up, file) {
+			// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+			// 比如设置了同名文件覆盖上传，那么生成的覆盖上传token的key，必须和上传的key一致
+			return key;
+		}
+	}
+});
+
+// 获取token
+function getToken(key) {
+  $.ajax({
+	url : 'TokenAction/get.do',
+	type : 'post',
+	async : false,
+	data : {"key" : key },
+	success : function(data) {
+		var obj = JSON.parse(data);
+		token = obj.token;
+	}
+  });
+}

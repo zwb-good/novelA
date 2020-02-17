@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lemon.dao.ReplaycommentMapper">
+  <resultMap id="BaseResultMap" type="com.lemon.pojo.Replaycomment">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="commentId" jdbcType="INTEGER" property="commentId" />
+    <result column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
+    <result column="likes" jdbcType="INTEGER" property="likes" />
+  </resultMap>
+  <resultMap id="AndCommentResultMap" type="com.lemon.pojo.Replaycomment">
+    <id column="replaycomment_id" jdbcType="INTEGER" property="id" />
+    <result column="replaycomment_commentId" jdbcType="INTEGER" property="commentId" />
+    <result column="replaycomment_userId" jdbcType="INTEGER" property="userId" />
+    <result column="replaycomment_content" jdbcType="VARCHAR" property="content" />
+    <result column="replaycomment_time" jdbcType="TIMESTAMP" property="time" />
+    <result column="replaycomment_likes" jdbcType="INTEGER" property="likes" />
+    <association property="comment" javaType="com.lemon.pojo.Comment">
+    	<id column="comment_id" jdbcType="INTEGER" property="id" />
+    	<result column="comment_userId" jdbcType="INTEGER" property="userId" />
+    	<result column="comment_bookId" jdbcType="INTEGER" property="bookId" />
+    	<result column="comment_content" jdbcType="VARCHAR" property="content" />
+    	<result column="comment_time" jdbcType="TIMESTAMP" property="time" />
+    	<result column="comment_likes" jdbcType="INTEGER" property="likes" />
+    	<result column="comment_comments" jdbcType="INTEGER" property="comments" />
+    </association>
+    <association property="reader" javaType="com.lemon.pojo.Reader">
+    	<id column="reader_id" property="id" />
+    	<result column="reader_name" property="name" />
+        <result column="reader_sex" property="sex" />
+        <result column="reader_signature" property="signature" />
+        <result column="reader_headUrl" property="headUrl" />
+        <result column="reader_userId" property="userId" />
+    </association>
+  </resultMap>
+  <resultMap id="AndReplayResultMap" type="com.lemon.pojo.Replaycomment">
+    <id column="replay_id" jdbcType="INTEGER" property="id" />
+    <result column="replay_commentId" jdbcType="INTEGER" property="commentId" />
+    <result column="replay_userId" jdbcType="INTEGER" property="userId" />
+    <result column="replay_content" jdbcType="VARCHAR" property="content" />
+    <result column="replay_time" jdbcType="TIMESTAMP" property="time" />
+    <result column="replay_likes" jdbcType="INTEGER" property="likes" />
+    <result column="replay_toUserId" jdbcType="INTEGER" property="toUserId" />
+    <result column="replay_replayId" jdbcType="INTEGER" property="replayId" />
+    <association property="beforeReplay" javaType="com.lemon.pojo.Replaycomment">
+    	<id column="beforeReplay_id" jdbcType="INTEGER" property="id" />
+    	<result column="beforeReplay_commentId" jdbcType="INTEGER" property="commentId" />
+    	<result column="beforeReplay_userId" jdbcType="INTEGER" property="userId" />
+    	<result column="beforeReplay_content" jdbcType="VARCHAR" property="content" />
+    	<result column="beforeReplay_time" jdbcType="TIMESTAMP" property="time" />
+    	<result column="beforeReplay_likes" jdbcType="INTEGER" property="likes" />
+    	<result column="beforeReplay_toUserId" jdbcType="INTEGER" property="toUserId" />
+    	<result column="beforeReplay_replayId" jdbcType="INTEGER" property="replayId" />
+    </association>
+    <association property="reader" javaType="com.lemon.pojo.Reader">
+    	<id column="reader_id" property="id" />
+    	<result column="reader_name" property="name" />
+        <result column="reader_sex" property="sex" />
+        <result column="reader_signature" property="signature" />
+        <result column="reader_headUrl" property="headUrl" />
+        <result column="reader_userId" property="userId" />
+    </association>
+  </resultMap>
+  <resultMap id="AndReaderResultMap" type="com.lemon.pojo.Replaycomment">
+    <id column="replay_id" jdbcType="INTEGER" property="id" />
+    <result column="replay_commentId" jdbcType="INTEGER" property="commentId" />
+    <result column="replay_userId" jdbcType="INTEGER" property="userId" />
+    <result column="replay_content" jdbcType="VARCHAR" property="content" />
+    <result column="replay_time" jdbcType="TIMESTAMP" property="time" />
+    <result column="replay_likes" jdbcType="INTEGER" property="likes" />
+    <result column="replay_toUserId" jdbcType="INTEGER" property="toUserId" />
+    <result column="replay_replayId" jdbcType="INTEGER" property="replayId" />
+    <result column="replay_state" jdbcType="INTEGER" property="state" />
+    <association property="reader" javaType="com.lemon.pojo.Reader">
+    		<id column="from_reader_id" property="id" />
+      		<result column="from_reader_name" property="name" />
+      		<result column="from_reader_sex" property="sex" />
+      		<result column="from_reader_signature" property="signature" />
+      		<result column="from_reader_headUrl" property="headUrl" />
+      		<result column="from_reader_userId" property="userId" />
+    </association>
+    <association property="toReader" javaType="com.lemon.pojo.Reader">
+    		<id column="to_reader_id" property="id" />
+      		<result column="to_reader_name" property="name" />
+      		<result column="to_reader_sex" property="sex" />
+      		<result column="to_reader_signature" property="signature" />
+      		<result column="to_reader_headUrl" property="headUrl" />
+      		<result column="to_reader_userId" property="userId" />
+    </association>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, commentId, userId, content, time, likes
+  </sql>
+  <sql id="AndComment_Column_List">
+    replaycomment.id as replaycomment_id, 
+    replaycomment.commentId as replaycomment_commentId, 
+    replaycomment.userId as replaycomment_userId, 
+    replaycomment.content as replaycomment_content, 
+    DATE_FORMAT(replaycomment.time,'%Y-%m-%d %H:%i:%s') as replaycomment_time,
+    replaycomment.likes as replaycomment_likes,
+    comment.id as comment_id, 
+    comment.userId as comment_userId, 
+    comment.bookId as comment_bookId, 
+    comment.content as comment_content, 
+    DATE_FORMAT(comment.time,'%Y-%m-%d %H:%i:%s') as comment_time,
+    <!-- comment.time as comment_time,  -->
+    comment.likes as comment_likes, 
+    comment.comments as comment_comments,
+    reader.id as reader_id, 
+    reader.name as reader_name, 
+    reader.sex as reader_sex, 
+    reader.signature as reader_signature, 
+    reader.headUrl as reader_headUrl, 
+    reader.userId as reader_userId
+  </sql>
+  <sql id="AndReplay_Column_List">
+  	replay.id as replay_id,
+	replay.commentId as replay_commentId,
+	replay.userId as replay_userId,
+	replay.content as replay_content,
+	replay.time as replay_time,
+	replay.likes as replay_likes,
+	replay.replayId as replay_replayId,
+	replay.toUserId as replay_toUserId,
+	beforeReplay.userId as beforeReplay_userId,
+	beforeReplay.id as beforeReplay_id,
+	beforeReplay.commentId as beforeReplay_commentId,
+	beforeReplay.content as beforeReplay_content,
+	beforeReplay.time as beforeReplay_time,
+	beforeReplay.likes as beforeReplay_likes,
+	beforeReplay.replayId as beforeReplay_replayId,
+	beforeReplay.toUserId as beforeReplay_toUserId,
+	reader.id as reader_id,
+	reader.`name` as reader_name,
+	reader.sex as reader_sex,
+	reader.signature as reader_signature,
+	reader.headUrl as reader_headUrl,
+	reader.userId as reader_userId,
+	reader.news as reader_news
+  </sql>
+  <sql id="AndReader_Column_List">
+  	replay.id as replay_id,
+	replay.commentId as replay_commentId,
+	replay.userId as replay_userId,
+	replay.content as replay_content,
+	replay.time as replay_time,
+	replay.likes as replay_likes,
+	replay.replayId as replay_replayId,
+	replay.toUserId as replay_toUserId,
+	replay.state as replay_state,
+	from_reader.id as from_reader_id, 
+    from_reader.name as from_reader_name, 
+    from_reader.sex as from_reader_sex, 
+    from_reader.signature as from_reader_signature, 
+    from_reader.headUrl as from_reader_headUrl, 
+    from_reader.userId as from_reader_userId,
+    to_reader.id as to_reader_id, 
+    to_reader.name as to_reader_name, 
+    to_reader.sex as to_reader_sex, 
+    to_reader.signature as to_reader_signature, 
+    to_reader.headUrl as to_reader_headUrl, 
+    to_reader.userId as to_reader_userId
+  </sql>
+  <select id="selectByExampleAndReader" parameterType="com.lemon.pojo.ReplaycommentExample" resultMap="AndReaderResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="AndReader_Column_List" />
+    FROM
+	replaycomment as replay
+	LEFT JOIN reader as from_reader ON replay.userId = from_reader.userId
+	LEFT JOIN reader as to_reader ON replay.toUserId = to_reader.userId
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKeyAndReader" parameterType="java.lang.Integer" resultMap="AndReaderResultMap">
+    select 
+    <include refid="AndReader_Column_List" />
+    FROM
+	replaycomment as replay
+	LEFT JOIN reader as from_reader ON replay.userId = from_reader.userId
+	LEFT JOIN reader as to_reader ON replay.toUserId = to_reader.userId
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByExampleAndReplay" parameterType="com.lemon.pojo.ReplaycommentExample" resultMap="AndReplayResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="AndReplay_Column_List" />
+    FROM
+	replaycomment as replay
+	INNER JOIN replaycomment as beforeReplay ON replay.replayId = beforeReplay.id
+	INNER JOIN reader ON replay.userId = reader.userId
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKeyAndReplay" parameterType="java.lang.Integer" resultMap="AndReplayResultMap">
+    select 
+    <include refid="AndReplay_Column_List" />
+    FROM
+	replaycomment as replay
+	INNER JOIN replaycomment as beforeReplay ON replay.replayId = beforeReplay.id
+	INNER JOIN reader ON replay.userId = reader.userId
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByExampleAndComment" parameterType="com.lemon.pojo.ReplaycommentExample" resultMap="AndCommentResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="AndComment_Column_List" />
+    FROM replaycomment
+	INNER JOIN `comment` ON replaycomment.commentId = `comment`.id
+	INNER JOIN reader ON replaycomment.userId = reader.userId
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKeyAndComment" parameterType="java.lang.Integer" resultMap="AndCommentResultMap">
+    select 
+    <include refid="AndComment_Column_List" />
+    FROM replaycomment
+	INNER JOIN `comment` ON replaycomment.commentId = `comment`.id
+	INNER JOIN reader ON replaycomment.userId = reader.userId
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByExample" parameterType="com.lemon.pojo.ReplaycommentExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from replaycomment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from replaycomment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from replaycomment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.lemon.pojo.ReplaycommentExample">
+    delete from replaycomment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.lemon.pojo.Replaycomment">
+    insert into replaycomment (id, commentId, userId, 
+      content, time, likes
+      )
+    values (#{id,jdbcType=INTEGER}, #{commentId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{content,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{likes,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.lemon.pojo.Replaycomment">
+    insert into replaycomment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="commentId != null">
+        commentId,
+      </if>
+      <if test="userId != null">
+        userId,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+      <if test="likes != null">
+        likes,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="commentId != null">
+        #{commentId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="likes != null">
+        #{likes,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.lemon.pojo.ReplaycommentExample" resultType="java.lang.Long">
+    select count(*) from replaycomment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update replaycomment
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.commentId != null">
+        commentId = #{record.commentId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null">
+        userId = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.time != null">
+        time = #{record.time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.likes != null">
+        likes = #{record.likes,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update replaycomment
+    set id = #{record.id,jdbcType=INTEGER},
+      commentId = #{record.commentId,jdbcType=INTEGER},
+      userId = #{record.userId,jdbcType=INTEGER},
+      content = #{record.content,jdbcType=VARCHAR},
+      time = #{record.time,jdbcType=TIMESTAMP},
+      likes = #{record.likes,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lemon.pojo.Replaycomment">
+    update replaycomment
+    <set>
+      <if test="commentId != null">
+        commentId = #{commentId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        userId = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="likes != null">
+        likes = #{likes,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lemon.pojo.Replaycomment">
+    update replaycomment
+    set commentId = #{commentId,jdbcType=INTEGER},
+      userId = #{userId,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      time = #{time,jdbcType=TIMESTAMP},
+      likes = #{likes,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByIds" parameterType="java.lang.Integer">
+    update replaycomment set state = 1 where id in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id,jdbcType=INTEGER}
+    </foreach>
+  </update>
+</mapper>
